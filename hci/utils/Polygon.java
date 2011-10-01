@@ -1,0 +1,45 @@
+package hci.utils;
+
+import java.util.ArrayList;
+import java.awt.Color;
+import hci.utils.Point;
+
+/**
+ * simple class for handling polygons
+ * @author Daniel
+ *
+ */
+
+
+public class Polygon{
+
+	public ArrayList<Point> polygons = null;
+	public Color color;
+	public String tag;
+	
+	
+	public Polygon(){
+		polygons = new ArrayList<Point>();
+	}
+	
+	public void addPoint(Point point){
+		polygons.add(point);
+	}
+	
+	public Point getPoint(int position){
+		return polygons.get(position);
+	}
+	
+	public void setColor(Color color){
+		
+		this.color = color;	
+	}
+	
+	public Color getColor(){
+		return this.color;
+	}
+	
+	public int size(){
+		return polygons.size();
+	}
+}
