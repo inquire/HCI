@@ -1,7 +1,11 @@
 package hci;
 
+
+import hci.utils.MenuContainer;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -12,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 /**
  * Main class of the program - handles display of the main window
@@ -23,7 +28,8 @@ public class ImageLabeller extends JFrame {
 	 * some java stuff to get rid of warnings
 	 */
 	private static final long serialVersionUID = 1L;
-	
+	final JFileChooser fc = new JFileChooser();
+	File file;
 	/**
 	 * main window panel
 	 */
@@ -42,6 +48,7 @@ public class ImageLabeller extends JFrame {
 	/**
 	 * handles New Object button action
 	 */
+	
 	public void addNewPolygon() {
 		imagePanel.addNewPolygon();
 	}
@@ -94,21 +101,37 @@ public class ImageLabeller extends JFrame {
         //create toolbox panel
         toolboxPanel = new JPanel();
         
-        //Add button
-		JButton newPolyButton = new JButton("New object");
-		newPolyButton.setMnemonic(KeyEvent.VK_N);
-		newPolyButton.setSize(50, 20);
-		newPolyButton.setEnabled(true);
-		newPolyButton.addActionListener(new ActionListener() {
+        /**
+         * Menu Containing Buttons
+         * 
+         * @author Daniel
+         */
+        MenuContainer menu = new MenuContainer();
+        
+        JButton newPolyButton =  menu.getNewPolyButton();
+        newPolyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 			    	addNewPolygon();
 			}
 		});
-		newPolyButton.setToolTipText("Click to add new object");
-		
-		toolboxPanel.add(newPolyButton);
-		
+        toolboxPanel.add(newPolyButton);
+        
+        JButton testButton = menu.getTestButton();
+        testButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				int returnVal =fc.showOpenDialog(fc);
+				if(returnVal == JFileChooser.APPROVE_OPTION){
+					File file = fc.getSelectedFile();
+				}
+			    	
+			}
+		});
+        toolboxPanel.add(testButton);
+        
+      
 		//add toolbox to window
 		appPanel.add(toolboxPanel);
 		
