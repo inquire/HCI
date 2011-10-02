@@ -12,7 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
+
 import java.util.Random;
 
 // My imports
@@ -43,7 +44,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	/**
 	 * list of polygons
 	 */
-	ArrayList<Polygon> polygonsList = null;
+	CustomImage polygonsList = null;;
 	
 	// ============================ Random Colors ===========================
 	
@@ -58,7 +59,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	
 	public ImagePanel() {
 		currentPolygon = new Polygon();
-		polygonsList = new ArrayList<Polygon>();
+		polygonsList = new CustomImage();
 		
 
 		this.setVisible(true);
@@ -79,6 +80,10 @@ public class ImagePanel extends JPanel implements MouseListener {
 	 */
 	public ImagePanel(String imageName) throws Exception{
 		this();
+		setImage(imageName);
+	}
+	
+	public void setImage(String imageName) throws IOException{
 		image = ImageIO.read(new File(imageName));
 		if (image.getWidth() > 800 || image.getHeight() > 600) {
 			int newWidth = image.getWidth() > 800 ? 800 : (image.getWidth() * 600)/image.getHeight();
@@ -106,7 +111,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	public void paint(Graphics g) {
 		super.paint(g);
 		
-		//display iamge
+		//display image
 		ShowImage();
 		
 		//display all the completed polygons
@@ -160,7 +165,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 		//finish the current polygon if any
 		if (currentPolygon != null ) {
 			finishPolygon(currentPolygon);
-			polygonsList.add(currentPolygon);
+			polygonsList.addPolygon(currentPolygon);
 		}
 		
 		currentPolygon = new Polygon();	
