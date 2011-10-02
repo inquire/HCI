@@ -12,9 +12,9 @@ import hci.utils.Point;
 
 public class Polygon{
 
-	public ArrayList<Point> polygons = null;
-	public Color color;
-	public String tag;
+	private ArrayList<Point> polygons = null;
+	private Color color;
+	private String tag;
 	
 	public Polygon(){
 		polygons = new ArrayList<Point>();
@@ -33,7 +33,6 @@ public class Polygon{
 	}
 	
 	public void setColor(Color color){
-		
 		this.color = color;	
 	}
 	
