@@ -26,14 +26,14 @@ public class MenuContainer extends JFrame{
 	private JButton newPolyButton;
 	private JButton testButton;
 	private FlowLayout layout;
-	private Container container;
+	//private Container container;
 	
 	
 	public MenuContainer(){
 		super("MenuContainer Mark1");
 		
 		layout = new FlowLayout();
-		container = getContentPane();
+		//container = getContentPane();
 		setLayout(layout);
 		
 		/* Button New Polygon */
