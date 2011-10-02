@@ -13,10 +13,11 @@ import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+//import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Main class of the program - handles display of the main window
@@ -52,6 +53,7 @@ public class ImageLabeller extends JFrame {
 	public void addNewPolygon() {
 		imagePanel.addNewPolygon();
 	}
+
 	
 	@Override
 	public void paint(Graphics g) {
@@ -125,6 +127,12 @@ public class ImageLabeller extends JFrame {
 				int returnVal =fc.showOpenDialog(fc);
 				if(returnVal == JFileChooser.APPROVE_OPTION){
 					File file = fc.getSelectedFile();
+					try{
+						imagePanel.setImage(file.getPath());
+					} catch(IOException e1){
+						e1.printStackTrace();
+					}
+					repaint();
 				}
 			    	
 			}
@@ -140,6 +148,7 @@ public class ImageLabeller extends JFrame {
         this.setVisible(true);
 	}
 	
+
 	/**
 	 * Runs the program
 	 * @param argv path to an image
