@@ -16,8 +16,18 @@ import java.awt.event.ActionListener;
 //import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+import hci.utils.CustomImage;
+import hci.utils.Polygon;
+import hci.utils.Metadata;
 
 /**
  * Main class of the program - handles display of the main window
@@ -79,6 +89,13 @@ public class ImageLabeller extends JFrame {
 		  		int result = JOptionPane.showOptionDialog(null, "Are you sure you want to exit?", "Really quit?", JOptionPane.YES_NO_CANCEL_OPTION, 
 		  				JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 		  			if (result == JOptionPane.YES_OPTION){
+		  				
+		  				Metadata saveFile = new Metadata();
+		  				saveFile.saveMetadata(imagePanel.getCustomImage());
+		  				CustomImage something = saveFile.loadMetadata();
+		  				System.out.println(something.size());
+		  				
+		  				
 		  				System.out.println("Bye bye!");
 		  				System.exit(0);
 		  			}else{

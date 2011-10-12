@@ -10,8 +10,12 @@ import hci.utils.Point;
  *
  */
 
-public class Polygon{
+public class Polygon implements java.io.Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Point> polygons = null;
 	private Color color;
 	private String tag;

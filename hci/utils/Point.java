@@ -5,7 +5,11 @@ package hci.utils;
  * @author Michal
  *
  */
-public class Point {
+public class Point implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int x = 0;
 	private int y = 0;
 	

@@ -5,8 +5,12 @@ import java.util.Iterator;
 
 import hci.utils.Polygon;
 
-public class CustomImage implements Iterable<Polygon>{
+public class CustomImage implements Iterable<Polygon>, java.io.Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Polygon> shapes = null;
 	private String fileName;
 	
