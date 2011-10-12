@@ -2,10 +2,12 @@ package hci.utils;
 
 import hci.ImagePanel;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Container;
 import java.awt.event.KeyEvent;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 
@@ -26,6 +28,8 @@ public class MenuContainer extends JFrame{
 	private JButton newPolyButton;
 	private JButton testButton;
 	private FlowLayout layout;
+	private JButton saveButton;
+	//private BoxLayout layout;
 	//private Container container;
 	
 	
@@ -33,6 +37,7 @@ public class MenuContainer extends JFrame{
 		super("MenuContainer Mark1");
 		
 		layout = new FlowLayout();
+		//layout = new BoxLayout(container,BoxLayout.X_AXIS);
 		//container = getContentPane();
 		setLayout(layout);
 		
@@ -40,7 +45,7 @@ public class MenuContainer extends JFrame{
 		
 		newPolyButton = new JButton("New object");
 		newPolyButton.setMnemonic(KeyEvent.VK_N);
-		newPolyButton.setSize(50, 20);
+		newPolyButton.setSize(100,20);
 		newPolyButton.setEnabled(true);
 		newPolyButton.setToolTipText("Click to add new object");
 		
@@ -48,9 +53,17 @@ public class MenuContainer extends JFrame{
 		
 		testButton = new JButton("Load");
 		testButton.setMnemonic(KeyEvent.VK_N);
-		testButton.setSize(50, 20);
+		testButton.setSize(100,20);
 		testButton.setEnabled(true);
 		testButton.setToolTipText("Click to load new picture");
+		
+		/* Sa ve Button*/
+		
+		saveButton = new JButton("Save");
+		saveButton.setMnemonic(KeyEvent.VK_N);
+		saveButton.setSize(100, 20);
+		saveButton.setEnabled(true);
+		saveButton.setToolTipText("Click to save current configuration");
 		
 	}
 
@@ -62,7 +75,9 @@ public class MenuContainer extends JFrame{
 		return testButton;
 	}
 	
-	
+	public JButton getSaveButton(){
+		return saveButton;
+	}
 }	
 
 	
