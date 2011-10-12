@@ -3,6 +3,7 @@ package hci;
 
 import hci.utils.MenuContainer;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -11,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 //import java.awt.event.KeyEvent;
@@ -119,6 +121,11 @@ public class ImageLabeller extends JFrame {
 
         //create toolbox panel
         toolboxPanel = new JPanel();
+        GridLayout glayout = new GridLayout(0,1,0,10);
+        //toolboxPanel.setLayout(new BoxLayout(toolboxPanel, BoxLayout.Y_AXIS));
+        toolboxPanel.setLayout(glayout);
+        toolboxPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        
         
         /**
          * Menu Containing Buttons
@@ -157,6 +164,19 @@ public class ImageLabeller extends JFrame {
 			}
 		});
         toolboxPanel.add(testButton);
+        
+        JButton saveButton = menu.getSaveButton();
+        saveButton.addActionListener(new ActionListener() {
+        	
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		Metadata saveFile = new Metadata();
+  				saveFile.saveMetadata(imagePanel.getCustomImage(),imagePanel.getCustomImage().getFileName());
+  				CustomImage something = saveFile.loadMetadata(imagePanel.getCustomImage().getFileName());
+  				System.out.println(something.size());
+        	}
+        });
+        toolboxPanel.add(saveButton);
         
       
 		//add toolbox to window
