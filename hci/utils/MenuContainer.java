@@ -46,11 +46,11 @@ public class MenuContainer extends JFrame{
 		
 		/* Test Button */
 		
-		testButton = new JButton("Test Me");
+		testButton = new JButton("Load");
 		testButton.setMnemonic(KeyEvent.VK_N);
 		testButton.setSize(50, 20);
 		testButton.setEnabled(true);
-		testButton.setToolTipText("Click to test me");
+		testButton.setToolTipText("Click to load new picture");
 		
 	}
 

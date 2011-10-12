@@ -149,6 +149,8 @@ public class ImageLabeller extends JFrame {
 					} catch(IOException e1){
 						e1.printStackTrace();
 					}
+					//clear the previous polygons
+					imagePanel.polygonsList.clear();
 					repaint();
 				}
 			    	
