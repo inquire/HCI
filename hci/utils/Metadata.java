@@ -12,13 +12,15 @@ import java.io.ObjectOutputStream;
 
 public class Metadata {
 
-	public void saveMetadata(CustomImage imageMetadata){
+	public void saveMetadata(CustomImage imageMetadata, String file){
 	
 		try
 		{	
+			System.out.println(file);
+			String filename = file.replaceAll(".jpg", ".pisi");
 			// Write to disk with FileOutputStream
 			FileOutputStream f_out = new 
-			FileOutputStream("CustomImage.data");
+			FileOutputStream(filename);
 
 			// Write object with ObjectOutputStream
 			ObjectOutputStream obj_out = new
@@ -33,14 +35,15 @@ public class Metadata {
 	} 
 	
 	// FileNotFound , IOException, ClassNotFound	
-	public CustomImage loadMetadata(){	
+	public CustomImage loadMetadata(String file){	
 		
 		CustomImage ci = null;
 		try
 		{
+			String filename = file.replaceAll(".jpg", ".pisi");
 			// Read from disk using FileInputStream
 			FileInputStream f_in = new 
-			FileInputStream("CustomImage.data");
+			FileInputStream(filename);
 
 			// Read object using ObjectInputStream
 			ObjectInputStream obj_in = new ObjectInputStream (f_in);
@@ -62,6 +65,5 @@ public class Metadata {
 		}
 		
 		return ci;
-		
-		
-}}
+		}
+}

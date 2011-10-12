@@ -44,7 +44,11 @@ public class ImagePanel extends JPanel implements MouseListener {
 	/**
 	 * list of polygons
 	 */
-	CustomImage polygonsList = null;;
+	CustomImage polygonsList = null;
+	
+	String filename = null;
+	
+	
 	
 	// ============================ Random Colors ===========================
 	
@@ -80,6 +84,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	 */
 	public ImagePanel(String imageName) throws Exception{
 		this();
+		filename = imageName;
 		setImage(imageName);
 	}
 	
@@ -180,6 +185,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	}
 	
 	public CustomImage getCustomImage(){
+		polygonsList.setFileName(filename);
 		return polygonsList;
 	}
 	

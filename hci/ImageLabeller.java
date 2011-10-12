@@ -91,8 +91,8 @@ public class ImageLabeller extends JFrame {
 		  			if (result == JOptionPane.YES_OPTION){
 		  				
 		  				Metadata saveFile = new Metadata();
-		  				saveFile.saveMetadata(imagePanel.getCustomImage());
-		  				CustomImage something = saveFile.loadMetadata();
+		  				saveFile.saveMetadata(imagePanel.getCustomImage(),imagePanel.getCustomImage().getFileName());
+		  				CustomImage something = saveFile.loadMetadata(imagePanel.getCustomImage().getFileName());
 		  				System.out.println(something.size());
 		  				
 		  				
