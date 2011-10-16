@@ -16,8 +16,14 @@ public class Metadata {
 	
 		try
 		{	
+			String filename = null;
+			if (file.endsWith(".JPG")){
+				filename = file.replaceAll(".JPG", ".pisi");
+			}else{
+				filename = file.replaceAll(".jpg", ".pisi");
+			}
+			
 			System.out.println(file);
-			String filename = file.replaceAll(".jpg", ".pisi");
 			// Write to disk with FileOutputStream
 			FileOutputStream f_out = new 
 			FileOutputStream(filename);
@@ -40,7 +46,13 @@ public class Metadata {
 		CustomImage ci = null;
 		try
 		{
-			String filename = file.replaceAll(".jpg", ".pisi");
+			String filename = null;
+			if (file.endsWith(".JPG")){
+				filename = file.replaceAll(".JPG", ".pisi");
+			}else{
+				filename = file.replaceAll(".jpg", ".pisi");
+			}
+			
 			// Read from disk using FileInputStream
 			FileInputStream f_in = new 
 			FileInputStream(filename);
