@@ -50,10 +50,10 @@ public class CustomImage implements Iterable<BetaPolygon>, java.io.Serializable{
 		shapes.clear();
 	}
 	
-	public void modify(Polygon area, BetaPolygon polygon){
-		int location = shapes.indexOf(polygon);
-		shapes.get(location).translate(area);
-	}
+	//public void modify(Polygon area, BetaPolygon polygon){
+	//	int location = shapes.indexOf(polygon);
+	//	shapes.get(location).translate(area);
+	//}
 	
 	
 	
