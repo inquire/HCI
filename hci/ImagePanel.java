@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.io.IOException;
 import java.util.Random;
 
 // My imports
-
+import java.awt.Polygon;
 import hci.utils.*;
 
 /**
@@ -25,7 +26,7 @@ import hci.utils.*;
  * @author Michal
  *
  */
-public class ImagePanel extends JPanel implements MouseListener {
+public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener {
 	/**
 	 * some java stuff to get rid of warnings
 	 */
@@ -39,7 +40,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	/**
 	 * list of current polygon's vertices 
 	 */
-	Polygon currentPolygon = null;
+	BetaPolygon currentPolygon = null;
 	
 	/**
 	 * list of polygons
@@ -48,7 +49,8 @@ public class ImagePanel extends JPanel implements MouseListener {
 	
 	String filename = null;
 	
-	
+	boolean drag = false;
+	BetaPolygon currentModified = null;
 	
 	// ============================ Random Colors ===========================
 	
@@ -62,7 +64,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	 */
 	
 	public ImagePanel() {
-		currentPolygon = new Polygon();
+		currentPolygon = new BetaPolygon();
 		polygonsList = new CustomImage();
 		
 
@@ -75,6 +77,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 		this.setMaximumSize(panelSize);
 		
 		addMouseListener(this);
+		addMouseMotionListener(this);
 	}
 	
 	/**
@@ -121,7 +124,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 		ShowImage();
 		
 		//display all the completed polygons
-		for(Polygon polygon : polygonsList) {
+		for(BetaPolygon polygon : polygonsList) {
 			drawPolygon(polygon);
 			finishPolygon(polygon);
 		}
@@ -134,7 +137,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	 * displays a polygon without last stroke
 	 * @param polygon to be displayed
 	 */
-	public void drawPolygon(Polygon polygon) {
+	public void drawPolygon(BetaPolygon polygon) {
 		
 		Graphics2D g = (Graphics2D)this.getGraphics();
 		g.setColor(polygon.getColor());
@@ -152,7 +155,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	 * displays last stroke of the polygon (arch between the last and first vertices)
 	 * @param polygon to be finished
 	 */
-	public void finishPolygon(Polygon polygon) {
+	public void finishPolygon(BetaPolygon polygon) {
 		//if there are less than 3 vertices than nothing to be completed
 		if (polygon.size() >= 3) {
 			Point firstVertex = polygon.getPoint(0);
@@ -174,7 +177,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 			polygonsList.addPolygon(currentPolygon);
 		}
 		
-		currentPolygon = new Polygon();	
+		currentPolygon = new BetaPolygon();	
 		
 		// ======================== Assign Random Colors To Polygon ========================
 		
@@ -195,6 +198,23 @@ public class ImagePanel extends JPanel implements MouseListener {
 		polygonsList = customImage;
 	}
 	
+	public Polygon testInsideShape(int x, int y){
+		for(BetaPolygon polygon : polygonsList){
+			Polygon area = new Polygon();
+			for(Point point : polygon){
+				area.addPoint(point.getX(), point.getY());
+			}
+			if (area.contains(x, y)){
+				drag = true;
+				System.out.println("I'm on a boat!");
+				currentModified = polygon;
+				return area;
+			}
+		}
+		return null;
+	}
+	
+	
 	
 
 	@Override
@@ -202,32 +222,54 @@ public class ImagePanel extends JPanel implements MouseListener {
 		int x = e.getX();
 		int y = e.getY();
 		
-		//check if the cursor is within image area
-		if (x > image.getWidth() || y > image.getHeight()) {
-			//if not do nothing
-			return;
+		if (drag == false){
+			//check if the cursor is within image area
+			if (x > image.getWidth() || y > image.getHeight()) {
+				//if not do nothing
+				return;
+			}
+			
+			Graphics2D g = (Graphics2D)this.getGraphics();
+			
+			//if the left button than we will add a vertex to polygon
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				g.setColor(currentPolygon.getColor());
+				if (currentPolygon.size() != 0) {
+					Point lastVertex = currentPolygon.getPoint(currentPolygon.size() - 1);
+					g.drawLine(lastVertex.getX(), lastVertex.getY(), x, y);
+				}
+				g.fillOval(x-5,y-5,10,10);
+				
+				currentPolygon.addPoint(new Point(x,y));
+				System.out.println(x + " " + y);
+			}
+		}else{
+			if(testInsideShape(x, y) != null){
+				
+				Polygon area = testInsideShape(x,y);
+				area.translate(10, 10);
+				polygonsList.modify(area, currentModified);
+				repaint();
+				
+			}
+			
 		}
 		
-		Graphics2D g = (Graphics2D)this.getGraphics();
-		
-		//if the left button than we will add a vertex to polygon
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			g.setColor(currentPolygon.getColor());
-			if (currentPolygon.size() != 0) {
-				Point lastVertex = currentPolygon.getPoint(currentPolygon.size() - 1);
-				g.drawLine(lastVertex.getX(), lastVertex.getY(), x, y);
-			}
-			g.fillOval(x-5,y-5,10,10);
-			
-			currentPolygon.addPoint(new Point(x,y));
-			System.out.println(x + " " + y);
-		} 
+		 
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
+	public void mouseEntered(MouseEvent e) {
 	}
-
+	
+	
+	public void mouseMoved(MouseEvent e){
+		int x = e.getX();
+		int y = e.getY();
+		
+		testInsideShape(x, y);
+	}
+	
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 	}
@@ -237,7 +279,18 @@ public class ImagePanel extends JPanel implements MouseListener {
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent e) {
+//
+		
+		
 	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 	
 }
