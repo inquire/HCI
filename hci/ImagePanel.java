@@ -52,10 +52,21 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	boolean drag = false;
 	BetaPolygon currentModified = null;
 	
+	/** 
+	 * Cursor information regarding different events
+	 * 
+	 */
+	
+	int[] clicked = new int[2];
+	int[] released = new int[2];
+	
+	
 	// ============================ Random Colors ===========================
 	
-	Color[] polyColor = new Color[]{Color.pink, Color.green, Color.blue, Color.black, Color.cyan, Color.magenta, Color.orange, Color.red, Color.white, Color.yellow};
+	Color[] polyColor = new Color[]{Color.pink, Color.green, Color.blue, Color.cyan, Color.magenta, Color.orange, Color.red, Color.yellow};
 	Random rand = new Random();
+
+	private boolean polyInProgress;
 	
 	// ======================================================================
 	
@@ -172,7 +183,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	 */
 	public void addNewPolygon() {
 		//finish the current polygon if any
+		polyInProgress=false;
 		if (currentPolygon != null ) {
+			if(currentPolygon.size() < 3){
+				System.out.println("Can't create polygon with less than 3 points Mr! Insert at least "+ (3 - currentPolygon.size()) + " points! " );
+				return;
+			}
 			finishPolygon(currentPolygon);
 			polygonsList.addPolygon(currentPolygon);
 		}
@@ -198,22 +214,18 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		polygonsList = customImage;
 	}
 	
+	
 	public Polygon testInsideShape(int x, int y){
 		for(BetaPolygon polygon : polygonsList){
-			Polygon area = new Polygon();
-			for(Point point : polygon){
-				area.addPoint(point.getX(), point.getY());
-			}
-			if (area.contains(x, y)){
-				drag = true;
-				System.out.println("I'm on a boat!");
+			if (polygon.contains(x, y)){
+				//drag = true;
 				currentModified = polygon;
-				return area;
+				//System.out.println("I'm on a boat!");
+				return polygon;
 			}
 		}
 		return null;
 	}
-	
 	
 	
 
@@ -222,44 +234,97 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		int x = e.getX();
 		int y = e.getY();
 		
-		if (drag == false){
-			//check if the cursor is within image area
-			if (x > image.getWidth() || y > image.getHeight()) {
-				//if not do nothing
-				return;
-			}
-			
-			Graphics2D g = (Graphics2D)this.getGraphics();
-			
-			//if the left button than we will add a vertex to polygon
-			if (e.getButton() == MouseEvent.BUTTON1) {
-				g.setColor(currentPolygon.getColor());
-				if (currentPolygon.size() != 0) {
-					Point lastVertex = currentPolygon.getPoint(currentPolygon.size() - 1);
-					g.drawLine(lastVertex.getX(), lastVertex.getY(), x, y);
-				}
-				g.fillOval(x-5,y-5,10,10);
-				
-				currentPolygon.addPoint(new Point(x,y));
-				System.out.println(x + " " + y);
-			}
-		}else{
-			if(testInsideShape(x, y) != null){
-				
-				Polygon area = testInsideShape(x,y);
-				area.translate(10, 10);
-				polygonsList.modify(area, currentModified);
-				repaint();
-				
-			}
-			
+		//check if the cursor is within image area
+		if (x > image.getWidth() || y > image.getHeight()) {
+			//if not do nothing
+			return;
 		}
-		
-		 
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			if (testInsideShape(x, y)!=null){
+				if (polyInProgress == true){
+					
+					Graphics2D g = (Graphics2D)this.getGraphics();
+					
+					//if the left button than we will add a vertex to polygon
+					
+					polyInProgress=true;
+					g.setColor(currentPolygon.getColor());
+					if (currentPolygon.size() != 0) {
+						Point lastVertex = currentPolygon.getPoint(currentPolygon.size() - 1);
+						g.drawLine(lastVertex.getX(), lastVertex.getY(), x, y);
+					
+					g.fillOval(x-5,y-5,10,10);
+					
+					currentPolygon.addPoint(new Point(x,y));
+					System.out.println(x + " " + y);
+					}
+				}else{	
+						
+					drag = true;
+					
+					System.out.println("Pressed button inside mousePressed");
+					clicked[0] = x;
+					clicked[1] = y;
+					
+				}
+			}else{
+				
+				Graphics2D g = (Graphics2D)this.getGraphics();
+				
+				//if the left button than we will add a vertex to polygon
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					polyInProgress=true;
+					g.setColor(currentPolygon.getColor());
+					if (currentPolygon.size() != 0) {
+						Point lastVertex = currentPolygon.getPoint(currentPolygon.size() - 1);
+						g.drawLine(lastVertex.getX(), lastVertex.getY(), x, y);
+					}
+					g.fillOval(x-5,y-5,10,10);
+					
+					currentPolygon.addPoint(new Point(x,y));
+				}
+			}
+		}
+		if (e.getButton() == MouseEvent.BUTTON3) {
+			if (polyInProgress==true){
+				addNewPolygon();
+			}
+		}
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
+	public void mouseReleased(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		
+		
+		
+		
+		if (x > image.getWidth() || y > image.getHeight()) {
+			//if not do nothing
+			return;
+		}
+		
+		if (e.getButton() == MouseEvent.BUTTON1){
+			
+			if(drag == true){
+				System.out.println("Pressed button 3 inside mouseReleased!");
+				released[0] = x;
+				released[1] = y;	
+				
+				System.out.println("Stuff: " + e.getXOnScreen() + " / " + e.getYOnScreen());
+			
+				currentModified.translate(released[0] - clicked[0], released[1] - clicked[1]);
+			}	
+			//Polygon area = testInsideShape(x,y);
+			//area.translate(released[0] - clicked[0], released[1] - clicked[1]);
+			//polygonsList.modify(area, currentModified);
+			
+			System.out.println("Pair of foxy ladies:" + (released[0] - clicked[0]) + " / " + (released[1] - clicked[1]));
+			
+			repaint();
+			drag = false;
+		}
 	}
 	
 	
@@ -267,22 +332,19 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		int x = e.getX();
 		int y = e.getY();
 		
-		testInsideShape(x, y);
+		//testInsideShape(x, y);
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+	
+	@Override
+	public void mouseEntered(MouseEvent e) {
 	}
 	
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-//
-		
-		
 	}
 
 	@Override
