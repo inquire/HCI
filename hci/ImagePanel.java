@@ -90,6 +90,7 @@ public class ImagePanel extends JPanel implements MouseListener {
 	
 	public void setImage(String imageName) throws IOException{
 		image = ImageIO.read(new File(imageName));
+		filename = (imageName);
 		if (image.getWidth() > 800 || image.getHeight() > 600) {
 			int newWidth = image.getWidth() > 800 ? 800 : (image.getWidth() * 600)/image.getHeight();
 			int newHeight = image.getHeight() > 600 ? 600 : (image.getHeight() * 800)/image.getWidth();
