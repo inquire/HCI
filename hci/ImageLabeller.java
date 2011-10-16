@@ -147,10 +147,10 @@ public class ImageLabeller extends JFrame {
         testButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				int returnVal =fc.showOpenDialog(fc);
+				File file = null;
+				int returnVal = fc.showOpenDialog(fc);
 				if(returnVal == JFileChooser.APPROVE_OPTION){
-					File file = fc.getSelectedFile();
+					file = fc.getSelectedFile();
 					try{
 						imagePanel.setImage(file.getPath());
 					} catch(IOException e1){
@@ -159,6 +159,14 @@ public class ImageLabeller extends JFrame {
 					//clear the previous polygons
 					imagePanel.polygonsList.clear();
 					repaint();
+					
+					Metadata loadFile = new Metadata();
+					if(loadFile.checkMetadata(file.getPath())){
+						CustomImage something = loadFile.loadMetadata(imagePanel.getCustomImage().getFileName());
+		  				System.out.println("Contained polygons are: " + something.size());
+		  				imagePanel.loadPolygons(something);
+						}
+		  			repaint();
 				}
 			    	
 			}
@@ -173,7 +181,7 @@ public class ImageLabeller extends JFrame {
         		Metadata saveFile = new Metadata();
   				saveFile.saveMetadata(imagePanel.getCustomImage(),imagePanel.getCustomImage().getFileName());
   				CustomImage something = saveFile.loadMetadata(imagePanel.getCustomImage().getFileName());
-  				System.out.println(something.size());
+  				repaint();
         	}
         });
         toolboxPanel.add(saveButton);
