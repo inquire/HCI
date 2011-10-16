@@ -3,6 +3,7 @@ package hci.utils;
 import hci.utils.CustomImage;
 
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -56,6 +57,8 @@ public class Metadata {
 			// Read from disk using FileInputStream
 			FileInputStream f_in = new 
 			FileInputStream(filename);
+			
+			System.out.println("Showing the load path: " + filename);
 
 			// Read object using ObjectInputStream
 			ObjectInputStream obj_in = new ObjectInputStream (f_in);
@@ -78,4 +81,20 @@ public class Metadata {
 		
 		return ci;
 		}
+	
+	public boolean checkMetadata(String file){
+		String fileName = null;
+		if (file.endsWith(".JPG")){
+			fileName = file.replaceAll(".JPG", ".pisi");
+		}else{
+			fileName = file.replaceAll(".jpg", ".pisi");
+		}
+		
+		File checkFile = new File(fileName);
+		if (checkFile.exists()){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }
