@@ -1,6 +1,6 @@
 package hci.utils;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.awt.Color;
 import java.util.Iterator;
 import java.awt.Polygon;
@@ -9,40 +9,42 @@ import java.awt.Polygon;
 import hci.utils.Point;
 
 /**
- * simple class for handling polygons
+ * simple class for handling this
  * @author Daniel
  *
  */
 
-public class BetaPolygon implements Iterable<Point>, java.io.Serializable{
+public class BetaPolygon extends Polygon implements java.io.Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	//private BetaPolygon polygons = null;
-	private ArrayList<Point> polygons= null;
+	//private BetaPolygon this;
+	//private ArrayList<Point> this= null;
 	private Color color;
 	private String tag;
 	
 	
 	public BetaPolygon(){
-		//polygons = new BetaPolygon();
-		polygons = new ArrayList<Point>();
+		//this = new BetaPolygon();
+		//this = new ArrayList<Point>();
 	}
 	
 	public void addPoint(Point point){
-		//polygons.addPoint(point.getX(), point.getY());
-		polygons.add(point);
+		this.addPoint(point.getX(), point.getY());
+		//this.add(point);
 	}
 	
 	public Point getPoint(int position){
-		//Point point = new Point(polygons.xpoints[position], polygons.ypoints[position]);
-		return polygons.get(position);
+		Point point = new Point(this.xpoints[position], this.ypoints[position]);
+		//return this.get(position);
+		return point;
+		
 	}
 	
 	public int size(){
-		return polygons.size();
+		return this.npoints;
 	}
 	
 	public void setColor(Color color){
@@ -61,20 +63,25 @@ public class BetaPolygon implements Iterable<Point>, java.io.Serializable{
 		this.tag = tag;
 	}
 
+	/**
+	
 	public void translate(Polygon area){
-		polygons.clear();
+		this.clear();
 		int []x = area.xpoints;
 		int []y = area.ypoints;
 			for(int i = 0; i<area.npoints; i++){
 				Point point = new Point(x[i], y[i]);
-				polygons.add(point);
+				this.add(point);
 			}
-	
-		
 	}
 	
-	@Override
-	public Iterator<Point> iterator() {
-		return polygons.iterator();
-	}
+	**/
+	
+	
+	
+	
+	//@Override
+	//public Iterator<Point> iterator() {
+	//	return this.iterator();
+	//}
 }
