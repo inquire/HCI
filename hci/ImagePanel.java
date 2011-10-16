@@ -191,6 +191,11 @@ public class ImagePanel extends JPanel implements MouseListener {
 	}
 	
 	
+	public void loadPolygons(CustomImage customImage){
+		polygonsList = customImage;
+	}
+	
+	
 
 	@Override
 	public void mousePressed(MouseEvent e) {
