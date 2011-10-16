@@ -2,6 +2,10 @@ package hci.utils;
 
 import java.util.ArrayList;
 import java.awt.Color;
+import java.util.Iterator;
+import java.awt.Polygon;
+
+
 import hci.utils.Point;
 
 /**
@@ -10,25 +14,30 @@ import hci.utils.Point;
  *
  */
 
-public class Polygon implements java.io.Serializable{
+public class BetaPolygon implements Iterable<Point>, java.io.Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private ArrayList<Point> polygons = null;
+	//private BetaPolygon polygons = null;
+	private ArrayList<Point> polygons= null;
 	private Color color;
 	private String tag;
 	
-	public Polygon(){
+	
+	public BetaPolygon(){
+		//polygons = new BetaPolygon();
 		polygons = new ArrayList<Point>();
 	}
 	
 	public void addPoint(Point point){
+		//polygons.addPoint(point.getX(), point.getY());
 		polygons.add(point);
 	}
 	
 	public Point getPoint(int position){
+		//Point point = new Point(polygons.xpoints[position], polygons.ypoints[position]);
 		return polygons.get(position);
 	}
 	
@@ -50,5 +59,22 @@ public class Polygon implements java.io.Serializable{
 	
 	public void setTag(String tag){
 		this.tag = tag;
+	}
+
+	public void translate(Polygon area){
+		polygons.clear();
+		int []x = area.xpoints;
+		int []y = area.ypoints;
+			for(int i = 0; i<area.npoints; i++){
+				Point point = new Point(x[i], y[i]);
+				polygons.add(point);
+			}
+	
+		
+	}
+	
+	@Override
+	public Iterator<Point> iterator() {
+		return polygons.iterator();
 	}
 }
