@@ -8,7 +8,9 @@ import hci.utils.Polygon;
 public class CustomImage implements Iterable<Polygon>, java.io.Serializable{
 
 	/**
+	 * @Author Daniel Stanoescu
 	 * 
+	 * Class containing a set of polygons which are comprised of multiple points.
 	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Polygon> shapes = null;
