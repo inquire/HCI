@@ -28,7 +28,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import hci.utils.CustomImage;
-import hci.utils.Polygon;
+import hci.utils.BetaPolygon;
 import hci.utils.Metadata;
 
 /**
@@ -125,7 +125,7 @@ public class ImageLabeller extends JFrame {
         //toolboxPanel.setLayout(new BoxLayout(toolboxPanel, BoxLayout.Y_AXIS));
         toolboxPanel.setLayout(glayout);
         toolboxPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-        
+        this.addMouseListener(imagePanel);
         
         /**
          * Menu Containing Buttons
@@ -185,7 +185,6 @@ public class ImageLabeller extends JFrame {
         	}
         });
         toolboxPanel.add(saveButton);
-        
       
 		//add toolbox to window
 		appPanel.add(toolboxPanel);
