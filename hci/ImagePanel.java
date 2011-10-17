@@ -332,6 +332,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		int x = e.getX();
 		int y = e.getY();
 		
+		// check boarder of window and clear stuff. 
+		
 		//testInsideShape(x, y);
 	}
 	
