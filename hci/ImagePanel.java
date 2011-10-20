@@ -63,7 +63,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	
 	// ============================ Random Colors ===========================
 	
-	Color[] polyColor = new Color[]{Color.pink, Color.green, Color.blue, Color.cyan, Color.magenta, Color.orange, Color.red, Color.yellow};
+	Color[] polyColor = new Color[]{Color.pink, Color.green, Color.blue, Color.cyan, Color.magenta, Color.orange, Color.yellow};
 	Random rand = new Random();
 
 	private boolean polyInProgress;
@@ -151,7 +151,11 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	public void drawPolygon(BetaPolygon polygon) {
 		
 		Graphics2D g = (Graphics2D)this.getGraphics();
-		g.setColor(polygon.getColor());
+		if(polygon.isSelected){
+			g.setColor(Color.RED);
+		}else{
+			g.setColor(polygon.getColor());
+		}
 		for(int i = 0; i < polygon.size(); i++) {
 			Point currentVertex = polygon.getPoint(i);
 			if (i != 0) {
@@ -173,7 +177,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			Point lastVertex = polygon.getPoint(polygon.size() - 1);
 		
 			Graphics2D g = (Graphics2D)this.getGraphics();
-			g.setColor(polygon.getColor());
+			if(polygon.isSelected){
+				g.setColor(Color.RED);
+			}else{
+				g.setColor(polygon.getColor());
+
+			}
 			g.drawLine(firstVertex.getX(), firstVertex.getY(), lastVertex.getX(), lastVertex.getY());
 		}
 	}

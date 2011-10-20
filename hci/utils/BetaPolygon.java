@@ -24,7 +24,7 @@ public class BetaPolygon extends Polygon implements java.io.Serializable{
 	//private ArrayList<Point> this= null;
 	private Color color;
 	private String tag;
-	
+	public Boolean isSelected = false;
 	
 	public BetaPolygon(){
 		//this = new BetaPolygon();
@@ -61,6 +61,10 @@ public class BetaPolygon extends Polygon implements java.io.Serializable{
 	
 	public void setTag(String tag){
 		this.tag = tag;
+	}
+	
+	public String toString(){
+		return tag;
 	}
 
 	/**

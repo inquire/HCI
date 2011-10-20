@@ -1,6 +1,8 @@
 package hci;
 
-
+import hci.utils.CustomImage;
+import hci.utils.BetaPolygon;
+import hci.utils.Metadata;
 import hci.utils.MenuContainer;
 
 import javax.swing.BorderFactory;
@@ -10,12 +12,22 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-//import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -27,9 +39,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import hci.utils.CustomImage;
-import hci.utils.BetaPolygon;
-import hci.utils.Metadata;
 
 /**
  * Main class of the program - handles display of the main window
@@ -61,6 +70,15 @@ public class ImageLabeller extends JFrame {
 	/**
 	 * handles New Object button action
 	 */
+	
+	JTextField textField;
+	JTextArea textArea;
+	DefaultListModel model = new DefaultListModel();
+    JList list = new JList(model);
+    JPanel rightPanel = null;
+    JPanel buttonPanel = null;
+    JScrollPane scroll = null;
+	
 	
 	public void addNewPolygon() {
 		imagePanel.addNewPolygon();
@@ -108,11 +126,25 @@ public class ImageLabeller extends JFrame {
 		  	}
 		});
 
+		// ================================================================================
+
 		//setup main window panel
 		appPanel = new JPanel();
 		this.setLayout(new BoxLayout(appPanel, BoxLayout.X_AXIS));
 		this.setContentPane(appPanel);
 		
+		
+		toolboxPanel = new JPanel();
+		toolboxPanel.setLayout(new GridLayout(0,1,0,10));
+		toolboxPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		
+		buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(0,1,0,10));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		
+		// ================================================================================
+		
+		/**
         //Create and set up the image panel.
 		imagePanel = new ImagePanel(imageFilename);
 		imagePanel.setOpaque(true); //content panes must be opaque
@@ -126,7 +158,8 @@ public class ImageLabeller extends JFrame {
         toolboxPanel.setLayout(glayout);
         toolboxPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         this.addMouseListener(imagePanel);
-        
+        **/
+		
         /**
          * Menu Containing Buttons
          * 
@@ -138,7 +171,26 @@ public class ImageLabeller extends JFrame {
         newPolyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			    	addNewPolygon();
+				String s = (String)JOptionPane.showInputDialog(null,"Select a tag!","Select Tag",JOptionPane.PLAIN_MESSAGE);
+				/*	if (s != null && s.length() > 0){
+						
+						imagePanel.currentPolygon.setTag(s);
+						model.addElement(imagePanel.currentPolygon);
+						addNewPolygon();
+					} else {
+						JOptionPane.showMessageDialog(null,"You must enter an object tag","Error",JOptionPane.ERROR_MESSAGE);
+					} */
+					if (s != null){
+						if(s.length()>0){
+							imagePanel.currentPolygon.setTag(s);
+							model.addElement(imagePanel.currentPolygon);
+							addNewPolygon();
+						} else {
+							JOptionPane.showMessageDialog(null,"You must enter an object tag","Error",JOptionPane.ERROR_MESSAGE);
+						} 
+							
+						
+					}
 			}
 		});
         toolboxPanel.add(newPolyButton);
@@ -185,13 +237,106 @@ public class ImageLabeller extends JFrame {
         	}
         });
         toolboxPanel.add(saveButton);
-      
-		//add toolbox to window
-		appPanel.add(toolboxPanel);
-		
-		//display all the stuff
-		this.pack();
-        this.setVisible(true);
+        
+        JButton clearButton = menu.getClearButton();
+        clearButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		imagePanel.currentPolygon = new BetaPolygon();
+        		repaint();
+        	}
+        });
+        toolboxPanel.add(clearButton);
+        
+        JButton deleteButton = menu.getDeleteButton();
+        deleteButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		//list.getSelectedValue();
+        		BetaPolygon polygon = new BetaPolygon();
+        		polygon = (BetaPolygon)list.getSelectedValue();
+        		if (polygon != null){
+        			int result = JOptionPane.showConfirmDialog(null, "Are you sure do you want to delete "+polygon.getTag()+" tag?","Delete",JOptionPane.YES_NO_OPTION);
+        			if (result == JOptionPane.YES_OPTION){
+        				imagePanel.polygonsList.removePolygon(polygon);
+        				model.removeElement(list.getSelectedValue());
+        				repaint();
+        			}
+        		}
+        	}
+        });
+        buttonPanel.add(deleteButton);
+        
+        JButton renameButton = menu.getRenameButton();
+        renameButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e){
+        		BetaPolygon poligon = new BetaPolygon();
+        		poligon = (BetaPolygon) list.getSelectedValue();
+        		//int index = list.getSelectedIndex();
+        		if (poligon != null){
+        			String s = (String)JOptionPane.showInputDialog(null,"Rename your tag","Rename",JOptionPane.PLAIN_MESSAGE);
+        			if (s != null) {
+        				 if (s.length() > 0){
+        					poligon.setTag(s);
+        					rightPanel.updateUI();
+        				} else {
+        					JOptionPane.showMessageDialog(null,"You must enter a tag name","Error",JOptionPane.ERROR_MESSAGE);
+        				}
+        			/*	while(s.length() < 1){
+        					JOptionPane.showMessageDialog(null,"message","Error",JOptionPane.ERROR_MESSAGE);
+        					s = (String)JOptionPane.showInputDialog(null,"Rename your tag","Rename",JOptionPane.PLAIN_MESSAGE);
+        					
+        				} */
+        			} 
+        		} 
+        	
+        	}
+        }); 
+        buttonPanel.add(renameButton);
+      //Create and set up the image panel.
+      		imagePanel = new ImagePanel(imageFilename);
+      		imagePanel.setOpaque(true); //content panes must be opaque
+      		
+              appPanel.add(imagePanel);
+              
+              //create the whole right panel
+              rightPanel = new JPanel();
+              rightPanel.setLayout(new BorderLayout());
+              rightPanel.add(toolboxPanel,BorderLayout.NORTH);
+              
+              //create the scroll list
+              JScrollPane scroll = new JScrollPane(list);
+              scroll.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+              scroll.setPreferredSize(new Dimension(200, 150));
+              rightPanel.add(scroll,BorderLayout.CENTER);
+              
+              //colour the selected polygon from the list
+              list.addMouseListener(new MouseAdapter(){
+              	public void mouseClicked(MouseEvent evt){
+              		//System.out.println("list clicked");
+              		BetaPolygon polygon = new BetaPolygon();
+              		polygon = (BetaPolygon) list.getSelectedValue();
+              		if (polygon != null) {
+              			for (BetaPolygon polygon1 : imagePanel.polygonsList) {
+              				polygon1.isSelected = false;
+              			}
+              			//Polygon polygon = new Polygon();
+              			//polygon = (Polygon) list.getSelectedValue();
+              			polygon.isSelected = true;
+              			repaint();
+              		}
+              		
+              	}
+              	});
+              
+              
+              //add the buttons below
+              rightPanel.add(buttonPanel,BorderLayout.SOUTH);
+              
+              appPanel.add(rightPanel);
+              //appPanel.add(toolboxPanel);
+              
+      		//display all the stuff
+      		this.pack();
+            this.setVisible(true);
 	}
 	
 

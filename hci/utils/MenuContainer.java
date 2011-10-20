@@ -29,9 +29,9 @@ public class MenuContainer extends JFrame{
 	private JButton testButton;
 	private FlowLayout layout;
 	private JButton saveButton;
-	//private BoxLayout layout;
-	//private Container container;
-	
+	private JButton deleteButton;
+	private JButton renameButton;
+	private JButton clearButton;
 	
 	public MenuContainer(){
 		super("MenuContainer Mark1");
@@ -65,6 +65,25 @@ public class MenuContainer extends JFrame{
 		saveButton.setEnabled(true);
 		saveButton.setToolTipText("Click to save current configuration");
 		
+		deleteButton = new JButton("Delete");
+		deleteButton.setMnemonic(KeyEvent.VK_N);
+		deleteButton.setSize(100,20);
+		deleteButton.setEnabled(true);
+		deleteButton.setToolTipText("Click to delete the selected polygon");
+		
+		renameButton = new JButton("Rename");
+		renameButton.setMnemonic(KeyEvent.VK_N);
+		renameButton.setSize(100,20);
+		renameButton.setEnabled(true);
+		renameButton.setToolTipText("Click to rename the tag");
+		
+		clearButton = new JButton("Clear");
+		clearButton.setMnemonic(KeyEvent.VK_N);
+		clearButton.setSize(100,20);
+		clearButton.setEnabled(true);
+		clearButton.setToolTipText("Click to clear the unfinished polygon");
+		
+		
 	}
 
 	public JButton getNewPolyButton(){
@@ -77,6 +96,18 @@ public class MenuContainer extends JFrame{
 	
 	public JButton getSaveButton(){
 		return saveButton;
+	}
+	
+	public JButton getDeleteButton(){
+		return deleteButton;
+	}
+	
+	public JButton getRenameButton(){
+		return renameButton;
+	}
+	
+	public JButton getClearButton(){
+		return clearButton;
 	}
 }	
 
