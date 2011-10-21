@@ -20,15 +20,12 @@ public class BetaPolygon extends Polygon implements java.io.Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	//private BetaPolygon this;
-	//private ArrayList<Point> this= null;
+
 	private Color color;
 	private String tag;
 	public Boolean isSelected = false;
 	
 	public BetaPolygon(){
-		//this = new BetaPolygon();
-		//this = new ArrayList<Point>();
 	}
 	
 	public void addPoint(Point point){
@@ -40,8 +37,17 @@ public class BetaPolygon extends Polygon implements java.io.Serializable{
 		Point point = new Point(this.xpoints[position], this.ypoints[position]);
 		//return this.get(position);
 		return point;
-		
 	}
+	
+	public int getX(int x){
+		return xpoints[x];
+	}
+	
+	public int getY(int y){
+		return ypoints[y];
+	}
+	
+	
 	
 	public int size(){
 		return this.npoints;
@@ -67,25 +73,9 @@ public class BetaPolygon extends Polygon implements java.io.Serializable{
 		return tag;
 	}
 
-	/**
-	
-	public void translate(Polygon area){
-		this.clear();
-		int []x = area.xpoints;
-		int []y = area.ypoints;
-			for(int i = 0; i<area.npoints; i++){
-				Point point = new Point(x[i], y[i]);
-				this.add(point);
-			}
+	public void modifyPoint(int position, int x, int y){
+		xpoints[position] = x;
+		ypoints[position] = y;
 	}
-	
-	**/
-	
-	
-	
-	
-	//@Override
-	//public Iterator<Point> iterator() {
-	//	return this.iterator();
-	//}
+
 }

@@ -54,12 +54,13 @@ public class CustomImage implements Iterable<BetaPolygon>, java.io.Serializable{
 		shapes.remove(object);
 	}
 	
-	//public void modify(Polygon area, BetaPolygon polygon){
-	//	int location = shapes.indexOf(polygon);
-	//	shapes.get(location).translate(area);
-	//}
-	
-	
+	public void modifyPolygonPoint(BetaPolygon polygon, int position, int x, int y){
+		for(BetaPolygon currentPolygon : shapes){
+			if(currentPolygon.equals(polygon)){
+				currentPolygon.modifyPoint(position, x, y);
+			}
+		}
+	}
 	
 	@Override
 	public Iterator<BetaPolygon> iterator(){

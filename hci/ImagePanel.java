@@ -51,6 +51,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	
 	boolean drag = false;
 	BetaPolygon currentModified = null;
+	BetaPolygon currentModified2 = null;
 	
 	/** 
 	 * Cursor information regarding different events
@@ -59,7 +60,9 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	
 	int[] clicked = new int[2];
 	int[] released = new int[2];
-	
+	int[] margin = new int[2];
+	int[] moved = new int[2];
+	int movedPointCoordinate;
 	
 	// ============================ Random Colors ===========================
 	
@@ -67,7 +70,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	Random rand = new Random();
 
 	private boolean polyInProgress;
-	
+	private boolean onTheEdge;
+	private boolean editSpace;
+	private boolean rel;
+	Point modified;
 	// ======================================================================
 	
 	/**
@@ -251,8 +257,23 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		return null;
 	}
 	
+	public Point testContourShape(int x, int y){
+		for (BetaPolygon polygon : polygonsList){
+			polygon.invalidate();
+			for(int i = 0; i < polygon.size(); i++ ){
+			//	System.out.println("Pair of darn ladies:" + (x) + " / " + (y) + " !!! ");
+				if(((polygon.getX(i)+5 >= x ) &&(polygon.getX(i)-5 <= x)) &&
+				    ((polygon.getY(i)+5 >= y ) && (polygon.getY(i)-5 <= y))){
+					currentModified2 = polygon;
+					movedPointCoordinate = i;
+					onTheEdge = true;
+				//	System.out.println("Pair of foxy ladies:" + (x) + " / " + (y));
+				}
+			}
+		}
+		return null;
+	}
 	
-
 	@Override
 	public void mousePressed(MouseEvent e) {
 		int x = e.getX();
@@ -264,6 +285,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			return;
 		}
 		if (e.getButton() == MouseEvent.BUTTON1) {
+			
+			onTheEdge = false;
+			testContourShape(x, y);
+			
 			if (testInsideShape(x, y)!=null){
 				if (polyInProgress == true){
 					
@@ -309,21 +334,29 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 				}
 			}
 		}
-		if (e.getButton() == MouseEvent.BUTTON3) {
-			if (polyInProgress==true){
-				addNewPolygon();
+		//if (e.getButton() == MouseEvent.BUTTON3) {
+		//	if (polyInProgress==true){
+		//		addNewPolygon();
+		//	}
+		//}
+		
+		if(e.getButton() == MouseEvent.BUTTON3){
+			onTheEdge = false;
+			testContourShape(x, y);
+			if(onTheEdge == true){
+				onTheEdge = true;
+				margin[0] = x;
+				margin[1] = y;
 			}
 		}
+		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
-		
-		
-		
-		
+	
 		if (x > image.getWidth() || y > image.getHeight()) {
 			//if not do nothing
 			return;
@@ -337,17 +370,30 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 				released[1] = y;	
 				
 				System.out.println("Stuff: " + e.getXOnScreen() + " / " + e.getYOnScreen());
-			
-				currentModified.translate(released[0] - clicked[0], released[1] - clicked[1]);
+				//currentModified.translate(released[0] - clicked[0], released[1] - clicked[1]);
+				for(BetaPolygon polygon : polygonsList){
+					if(polygon.equals(currentModified)){
+						polygon.translate(released[0] - clicked[0], released[1] - clicked[1]);
+					}
+				}
+				repaint();
+				testInsideShape(x, y);
+				drag = false;
 			}	
-			//Polygon area = testInsideShape(x,y);
-			//area.translate(released[0] - clicked[0], released[1] - clicked[1]);
-			//polygonsList.modify(area, currentModified);
-			
-			System.out.println("Pair of foxy ladies:" + (released[0] - clicked[0]) + " / " + (released[1] - clicked[1]));
-			
-			repaint();
-			drag = false;
+			//System.out.println("Pair of foxy ladies:" + (released[0] - clicked[0]) + " / " + (released[1] - clicked[1]));
+		}
+		
+		if(e.getButton() == MouseEvent.BUTTON3){
+			if(onTheEdge == true){
+				currentModified.modifyPoint(movedPointCoordinate, x, y);
+				testInsideShape(x, y);
+				//printMeStuff(currentModified);
+				repaint();
+					
+				onTheEdge = true;
+				drag = true;
+				testInsideShape(x, y);
+			}
 		}
 	}
 	
@@ -356,13 +402,21 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		int x = e.getX();
 		int y = e.getY();
 		
-		// check boarder of window and clear stuff. 
+		testContourShape(x, y);
+		testInsideShape(x, y);
 		
-		//testInsideShape(x, y);
+		//System.out.println("Pair of foxy ladies:" + (x) + " / " + (y));
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		
+		int x = e.getX();
+		int y = e.getY();
+	
+		moved[0] = x;
+		moved[1] = y;
+		
 	}
 	
 	@Override
@@ -375,10 +429,27 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
+		int x = e.getX();
+		int y = e.getY();
+		
+		if (x > image.getWidth() || y > image.getHeight()) {
+			//if not do nothing
+			return;
+		}
+		
+		//testInsideShape(x, y);
+		
+		if(onTheEdge == true){
+			currentModified.modifyPoint(movedPointCoordinate,x, y);
+			repaint();
+		}
+		
+		/**
+		if(drag == true){
+			currentModified.translate(x - moved[0], y - moved[1]);
+			repaint();
+		}
+		**/
 	}
-	
-	
-	
 }
