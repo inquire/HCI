@@ -323,9 +323,23 @@ public class ImageLabeller extends JFrame {
               			polygon.isSelected = true;
               			repaint();
               		}
-              		
               	}
               	});
+              imagePanel.addMouseListener(new MouseAdapter(){
+                	public void mousePressed(MouseEvent evt){
+                		//System.out.println("list clicked");
+                		BetaPolygon b = new BetaPolygon();
+                		b = (BetaPolygon) imagePanel.testInsideShape(evt.getX(), evt.getY());
+                		if(b != null){
+                			
+                			//int n = imagePanel.testInsideShape(evt.getX(), evt.getY()).
+                			list.setSelectedValue(b, true);
+                			System.out.println(b.getTag());
+                			
+                		}
+                	}
+                	});
+              
               
               
               //add the buttons below

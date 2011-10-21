@@ -226,14 +226,16 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	
 	public Polygon testInsideShape(int x, int y){
 		for(BetaPolygon polygon : polygonsList){
+			polygon.isSelected = false;
 			if (polygon.contains(x, y)){
 				//drag = true;
 				currentModified = polygon;
+				polygon.isSelected = true;
+					
 				//System.out.println("I'm on a boat!");
-				return polygon;
 			}
 		}
-		return null;
+		return currentModified;
 	}
 	
 	
