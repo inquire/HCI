@@ -76,7 +76,6 @@ public class ImageLabeller extends JFrame {
     JPanel buttonPanel = null;
     JScrollPane scroll = null;
     
-    public static String path;
 	
     /**
      * Adds a new polygon to the image panel.
@@ -388,10 +387,7 @@ public class ImageLabeller extends JFrame {
 			//create a window and display the image
 			ImageLabeller window = new ImageLabeller();
 			window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-			File file = new File(argv[0]);
-			String absolutePathOfFirstFile = file.getAbsolutePath();
-			path = absolutePathOfFirstFile;
-			window.setupGUI(absolutePathOfFirstFile);
+			window.setupGUI(argv[0]);
 			
 		} catch (Exception e) {
 			System.err.println("Image: " + argv[0]);
