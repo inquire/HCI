@@ -19,9 +19,9 @@ public class Metadata {
 		{	
 			String filename = null;
 			if (file.endsWith(".JPG")){
-				filename = file.replaceAll(".JPG", ".pisi");
+				filename = file.replaceAll(".JPG", ".met");
 			}else{
-				filename = file.replaceAll(".jpg", ".pisi");
+				filename = file.replaceAll(".jpg", ".met");
 			}
 			
 			System.out.println(file);
@@ -49,9 +49,9 @@ public class Metadata {
 		{
 			String filename = null;
 			if (file.endsWith(".JPG")){
-				filename = file.replaceAll(".JPG", ".pisi");
+				filename = file.replaceAll(".JPG", ".met");
 			}else{
-				filename = file.replaceAll(".jpg", ".pisi");
+				filename = file.replaceAll(".jpg", ".met");
 			}
 			
 			// Read from disk using FileInputStream
@@ -85,9 +85,9 @@ public class Metadata {
 	public boolean checkMetadata(String file){
 		String fileName = null;
 		if (file.endsWith(".JPG")){
-			fileName = file.replaceAll(".JPG", ".pisi");
+			fileName = file.replaceAll(".JPG", ".met");
 		}else{
-			fileName = file.replaceAll(".jpg", ".pisi");
+			fileName = file.replaceAll(".jpg", ".met");
 		}
 		
 		File checkFile = new File(fileName);
