@@ -8,6 +8,7 @@ import hci.utils.MenuContainer;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -18,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import java.awt.BorderLayout;
@@ -26,6 +28,7 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -165,6 +168,11 @@ public class ImageLabeller extends JFrame {
          * 
          * @author Daniel
          */
+		
+		
+	//	public void keyPressed(KeyEvent e)
+		
+		
         MenuContainer menu = new MenuContainer();
         
         JButton newPolyButton =  menu.getNewPolyButton();
@@ -195,8 +203,8 @@ public class ImageLabeller extends JFrame {
 		});
         toolboxPanel.add(newPolyButton);
         
-        JButton testButton = menu.getTestButton();
-        testButton.addActionListener(new ActionListener() {
+        JButton loadButton = menu.getTestButton();
+        loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				File file = null;
@@ -223,7 +231,7 @@ public class ImageLabeller extends JFrame {
 			    	
 			}
 		});
-        toolboxPanel.add(testButton);
+        toolboxPanel.add(loadButton);
         
         JButton saveButton = menu.getSaveButton();
         saveButton.addActionListener(new ActionListener() {

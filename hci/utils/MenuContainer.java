@@ -26,7 +26,7 @@ public class MenuContainer extends JFrame{
 	ImagePanel imagePanel = null;
 	
 	private JButton newPolyButton;
-	private JButton testButton;
+	private JButton loadButton;
 	private FlowLayout layout;
 	private JButton saveButton;
 	private JButton deleteButton;
@@ -51,11 +51,11 @@ public class MenuContainer extends JFrame{
 		
 		/* Test Button */
 		
-		testButton = new JButton("Load");
-		testButton.setMnemonic(KeyEvent.VK_N);
-		testButton.setSize(100,20);
-		testButton.setEnabled(true);
-		testButton.setToolTipText("Click to load new picture");
+		loadButton = new JButton("Load");
+		loadButton.setMnemonic(KeyEvent.VK_N);
+		loadButton.setSize(100,20);
+		loadButton.setEnabled(true);
+		loadButton.setToolTipText("Click to load new picture");
 		
 		/* Sa ve Button*/
 		
@@ -91,7 +91,7 @@ public class MenuContainer extends JFrame{
 	}
 
 	public JButton getTestButton(){
-		return testButton;
+		return loadButton;
 	}
 	
 	public JButton getSaveButton(){
