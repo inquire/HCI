@@ -1,5 +1,8 @@
 package hci;
 
+
+// Custom classes imports
+
 import hci.utils.BetaPolygon;
 import hci.utils.CustomImage;
 import hci.utils.MenuContainer;
@@ -18,11 +21,11 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.AbstractAction;
+//import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
+//import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -38,7 +41,7 @@ import javax.swing.event.ListSelectionListener;
 
 /**
  * Main class of the program - handles display of the main window
- * @author Michal
+ * @author Diana
  *
  */
 public class ImageLabeller extends JFrame {
@@ -63,9 +66,7 @@ public class ImageLabeller extends JFrame {
 	 */
 	ImagePanel imagePanel = null;
 	
-	/**
-	 * handles New Object button action
-	 */
+	// Defines the elements that make the visual side of the application
 	
 	JTextField textField;
 	JTextArea textArea;
@@ -74,8 +75,13 @@ public class ImageLabeller extends JFrame {
     JPanel rightPanel = null;
     JPanel buttonPanel = null;
     JScrollPane scroll = null;
+    
+    public static String path;
 	
-	
+    /**
+     * Adds a new polygon to the image panel.
+     */
+    
 	public void addNewPolygon() {
 		imagePanel.addNewPolygon();
 	}
@@ -96,12 +102,12 @@ public class ImageLabeller extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 		  	public void windowClosing(WindowEvent event) {
 		  		//here we exit the program (maybe we should ask if the user really wants to do it?) 		- done
-		  		//maybe we also want to store the polygons somewhere? and read them next time 				- pending
-		  		
-		  		
-		  // ========================= Prompting the user for exit =========================
 		  		
 		  		Object [] options = {"Yes", "No"};
+		  		
+		  		/**
+		  		 * Prompts the user for exit
+		  		 */
 		  		
 		  		int result = JOptionPane.showOptionDialog(null, "Are you sure you want to exit?", "Really quit?", JOptionPane.YES_NO_CANCEL_OPTION, 
 		  				JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
@@ -123,58 +129,38 @@ public class ImageLabeller extends JFrame {
 		  			}else{
 		  				;
 		  			}
-		  // ================================================================================
-		  			
 		  	}
 		});
 
-		// ================================================================================
 
 		//setup main window panel
 		appPanel = new JPanel();
 		this.setLayout(new BoxLayout(appPanel, BoxLayout.X_AXIS));
 		this.setContentPane(appPanel);
-		
+	
+		//setup toolbox panel 
 		
 		toolboxPanel = new JPanel();
 		toolboxPanel.setLayout(new GridLayout(0,1,0,10));
 		toolboxPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		
+		// setup buttonPanel
+		
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(0,1,0,10));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		
-		// ================================================================================
-		
+			
 		/**
-        //Create and set up the image panel.
-		imagePanel = new ImagePanel(imageFilename);
-		imagePanel.setOpaque(true); //content panes must be opaque
-		
-        appPanel.add(imagePanel);
-
-        //create toolbox panel
-        toolboxPanel = new JPanel();
-        GridLayout glayout = new GridLayout(0,1,0,10);
-        //toolboxPanel.setLayout(new BoxLayout(toolboxPanel, BoxLayout.Y_AXIS));
-        toolboxPanel.setLayout(glayout);
-        toolboxPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-        this.addMouseListener(imagePanel);
-        **/
-		
-        /**
-         * Menu Containing Buttons
-         * 
-         * @author Daniel
-         */
-		
-		
-	//	public void keyPressed(KeyEvent e)
-		
+		 * Instantiates the buttons that make up right side menu.
+		 */
 		
         MenuContainer menu = new MenuContainer();
-        
         JButton newPolyButton =  menu.getNewPolyButton();
+        
+        /**
+         * Take care of user generated errors when adding new polygons.
+         */
+        
         newPolyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -183,28 +169,22 @@ public class ImageLabeller extends JFrame {
 					return;
 				}
 				String s = (String)JOptionPane.showInputDialog(null,"Select a tag!","Select Tag",JOptionPane.PLAIN_MESSAGE);
-				/*	if (s != null && s.length() > 0){
-						
+				if (s != null){
+					if(s.length()>0){
 						imagePanel.currentPolygon.setTag(s);
 						model.addElement(imagePanel.currentPolygon);
 						addNewPolygon();
 					} else {
 						JOptionPane.showMessageDialog(null,"You must enter an object tag","Error",JOptionPane.ERROR_MESSAGE);
-					} */
-					if (s != null){
-						if(s.length()>0){
-							imagePanel.currentPolygon.setTag(s);
-							model.addElement(imagePanel.currentPolygon);
-							addNewPolygon();
-						} else {
-							JOptionPane.showMessageDialog(null,"You must enter an object tag","Error",JOptionPane.ERROR_MESSAGE);
-						} 
-							
-						
-					}
+					} 
+				}
 			}
 		});
         toolboxPanel.add(newPolyButton);
+        
+        /**
+         * The parameters and actions for the load button.
+         */
         
         JButton loadButton = menu.getTestButton();
         loadButton.addActionListener(new ActionListener() {
@@ -221,6 +201,10 @@ public class ImageLabeller extends JFrame {
 	  				System.out.println(something.size());
   					
   				}
+  				
+  				/**
+  				 * Loads the file alongside with the metadata.
+  				 */
   				
 				File file = null;
 				int returnVal = fc.showOpenDialog(fc);
@@ -247,11 +231,14 @@ public class ImageLabeller extends JFrame {
 					}
 		  			repaint();
 		  			rightPanel.updateUI();
-				}
-			    	
+				}		    	
 			}
 		});
         toolboxPanel.add(loadButton);
+        
+        /**
+         * The parameter and actions for the save button.
+         */
         
         JButton saveButton = menu.getSaveButton();
         saveButton.addActionListener(new ActionListener() {
@@ -260,22 +247,22 @@ public class ImageLabeller extends JFrame {
         		
         		Metadata saveFile = new Metadata();
   				saveFile.saveMetadata(imagePanel.getCustomImage(),imagePanel.getCustomImage().getFileName());
-  				CustomImage something = saveFile.loadMetadata(imagePanel.getCustomImage().getFileName());
+  				//CustomImage something = saveFile.loadMetadata(imagePanel.getCustomImage().getFileName());
   				repaint();
         	}
         });
         toolboxPanel.add(saveButton);
         
+        /**
+         * The parameters and actions for the clear button.
+         */
+        
         JButton clearButton = menu.getClearButton();
-       /* clearButton.addActionListener(new ActionListener(){
-        	public void actionPerformed(ActionEvent e){
-        		imagePanel.currentPolygon = new BetaPolygon();
-        		repaint();
-        	}
-        }); */
         toolboxPanel.add(clearButton);
         
-
+        /**
+         * The parameters and actions for the delete button.
+         */
         
         JButton deleteButton = menu.getDeleteButton();
         deleteButton.addActionListener(new ActionListener(){
@@ -295,6 +282,10 @@ public class ImageLabeller extends JFrame {
         });
         buttonPanel.add(deleteButton);
         
+        /**
+         * The parameters and actions for the renameButton.
+         */
+        
         JButton renameButton = menu.getRenameButton();
         renameButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e){
@@ -310,19 +301,17 @@ public class ImageLabeller extends JFrame {
         				} else {
         					JOptionPane.showMessageDialog(null,"You must enter a tag name","Error",JOptionPane.ERROR_MESSAGE);
         				}
-        			/*	while(s.length() < 1){
-        					JOptionPane.showMessageDialog(null,"message","Error",JOptionPane.ERROR_MESSAGE);
-        					s = (String)JOptionPane.showInputDialog(null,"Rename your tag","Rename",JOptionPane.PLAIN_MESSAGE);
-        					
-        				} */
         			} 
         		} 
         	
         	}
         }); 
         buttonPanel.add(renameButton);
+        
+        
       //Create and set up the image panel.
-      		imagePanel = new ImagePanel(imageFilename);
+      
+        	imagePanel = new ImagePanel(imageFilename);
       		imagePanel.setOpaque(true); //content panes must be opaque
       		
               appPanel.add(imagePanel);
@@ -341,49 +330,43 @@ public class ImageLabeller extends JFrame {
               //colour the selected polygon from the list
               list.addListSelectionListener(new ListSelectionListener(){
               	public void valueChanged(ListSelectionEvent e){
-              		//System.out.println("list clicked");
               		BetaPolygon polygon = new BetaPolygon();
               		polygon = (BetaPolygon) list.getSelectedValue();
               		if (polygon != null) {
               			for (BetaPolygon polygon1 : imagePanel.polygonsList) {
               				polygon1.isSelected = false;
               			}
-              			//Polygon polygon = new Polygon();
-              			//polygon = (Polygon) list.getSelectedValue();
               			polygon.isSelected = true;
               			repaint();
               		}
               	}
-
-				
-				/*public void valueChanged(ListSelectionEvent e) {
-					// TODO Auto-generated method stub
-					
-				}*/
-              	});
+              });
+              
+              /**
+               * Adds a mouseListener for selecting the tag edit field when clicking the polygon in the image.
+               */
+              
               imagePanel.addMouseListener(new MouseAdapter(){
                 	public void mousePressed(MouseEvent evt){
                 		//System.out.println("list clicked");
                 		BetaPolygon b = new BetaPolygon();
                 		b = (BetaPolygon) imagePanel.testInsideShape(evt.getX(), evt.getY());
-                		if(b != null){
-                			
-                			//int n = imagePanel.testInsideShape(evt.getX(), evt.getY()).
+                		if(b != null){                			
                 			list.setSelectedValue(b, true);
-                			//System.out.println(b.getTag());
-                			
                 		}
                 	}
-                	});
+              });
+              
+              /**
+               * Adds a mouseListerner for repainting on mouse release.
+               */
               
               imagePanel.addMouseListener(new MouseAdapter(){
             	 public void mouseReleased(MouseEvent evt){
             		 repaint();
             	 }
               });
-              
-              
-              
+  
               //add the buttons below
               rightPanel.add(buttonPanel,BorderLayout.SOUTH);
               
@@ -405,7 +388,11 @@ public class ImageLabeller extends JFrame {
 			//create a window and display the image
 			ImageLabeller window = new ImageLabeller();
 			window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-			window.setupGUI(argv[0]);
+			File file = new File(argv[0]);
+			String absolutePathOfFirstFile = file.getAbsolutePath();
+			path = absolutePathOfFirstFile;
+			window.setupGUI(absolutePathOfFirstFile);
+			
 		} catch (Exception e) {
 			System.err.println("Image: " + argv[0]);
 			e.printStackTrace();

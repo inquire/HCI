@@ -1,7 +1,7 @@
 package hci;
 
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
+//import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.awt.Color;
@@ -24,7 +24,7 @@ import hci.utils.*;
 
 /**
  * Handles image editing panel
- * @author Michal
+ * @author Daniel
  *
  */
 public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener {
@@ -61,7 +61,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	
 	int[] clicked = new int[2];
 	int[] released = new int[2];
-	int[] margin = new int[2];
+	int[] margin = new int[2];	
 	int[] moved = new int[2];
 	int movedPointCoordinate;
 	
@@ -72,8 +72,6 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 
 	private boolean polyInProgress;
 	private boolean onTheEdge;
-	private boolean editSpace;
-	private boolean rel;
 	Point modified;
 	// ======================================================================
 	
@@ -112,6 +110,9 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	public void setImage(String imageName) throws IOException{
 		image = ImageIO.read(new File(imageName));
 		filename = (imageName);
+		
+		
+		System.out.print(imageName);
 		if (image.getWidth() > 800 || image.getHeight() > 600) {
 			int newWidth = image.getWidth() > 800 ? 800 : (image.getWidth() * 600)/image.getHeight();
 			int newHeight = image.getHeight() > 600 ? 600 : (image.getHeight() * 800)/image.getWidth();
@@ -195,7 +196,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 	}
 	
 	/**
-	 * moves current polygon to the list of polygons and makes pace for a new one
+	 * Moves current polygon to the list of polygons and makes space for a new one
+	 * It also ensures that a polygon is not smaller than 3 points.
 	 */
 	public void addNewPolygon() {
 		//finish the current polygon if any
@@ -214,23 +216,36 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		
 		// ======================== Assign Random Colors To Polygon ========================
 		
-			int whatColor = rand.nextInt(polyColor.length);
-			currentPolygon.setColor(polyColor[whatColor]);
+		int whatColor = rand.nextInt(polyColor.length);
+		currentPolygon.setColor(polyColor[whatColor]);
 		
 		// =================================================================================	
 			
 	}
 	
+	/**
+	 * Sets the filename of the image in the object
+	 * @return
+	 */
 	public CustomImage getCustomImage(){
 		polygonsList.setFileName(filename);
 		return polygonsList;
 	}
 	
-	
+	/**
+	 * Loads all the polygons of the image.
+	 * @param customImage
+	 */
 	public void loadPolygons(CustomImage customImage){
 		polygonsList = customImage;
 	}
 	
+	/**
+	 * Tests if the mouse cursor is inside a polygon and colors the polygon if inside it
+	 * @param x coordinate of the mouse
+	 * @param y coordinate of the mouse
+	 * @return the polygon you are inside
+	 */
 	
 	public Polygon testInsideShape(int x, int y){
 		
@@ -252,12 +267,17 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 				currentModified = polygon;
 				polygon.isSelected = true;
 				return currentModified;
-					
-				//System.out.println("I'm on a boat!");
 			}
 		}
 		return null;
 	}
+	
+	/**
+	 * Tests if you are in one of the points on the boundary of the polygon
+	 * @param x coordinate of the mouse
+	 * @param y coordinate of the mouse
+	 * @return null
+	 */
 	
 	public Point testContourShape(int x, int y){
 		for (BetaPolygon polygon : polygonsList){
@@ -269,7 +289,6 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 					currentModified2 = polygon;
 					movedPointCoordinate = i;
 					onTheEdge = true;
-				//	System.out.println("Pair of foxy ladies:" + (x) + " / " + (y));
 				}
 			}
 		}
@@ -286,6 +305,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			//if not do nothing
 			return;
 		}
+		
+		/**
+		 * Check if you are inside a shape and if you are memorize the point when you pressed mouse button 1
+		 * Else it starts drawing a polygon where the mouse button 1 was pressed
+		 */
+		
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			
 			onTheEdge = false;
@@ -336,11 +361,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 				}
 			}
 		}
-		//if (e.getButton() == MouseEvent.BUTTON3) {
-		//	if (polyInProgress==true){
-		//		addNewPolygon();
-		//	}
-		//}
+		
+		/**
+		 * Get the location where the mouse button nr 3 has been pushed
+		 */
 		
 		if(e.getButton() == MouseEvent.BUTTON3){
 			onTheEdge = false;
@@ -360,9 +384,13 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		int y = e.getY();
 	
 		if (x > image.getWidth() || y > image.getHeight()) {
-			//if not do nothing
 			return;
 		}
+		
+		/**
+		 * Set the final location of a moved polygon.
+		 */
+		
 		
 		if (e.getButton() == MouseEvent.BUTTON1){
 			
@@ -372,7 +400,6 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 				released[1] = y;	
 				
 				System.out.println("Stuff: " + e.getXOnScreen() + " / " + e.getYOnScreen());
-				//currentModified.translate(released[0] - clicked[0], released[1] - clicked[1]);
 				for(BetaPolygon polygon : polygonsList){
 					if(polygon.equals(currentModified)){
 						polygon.translate(released[0] - clicked[0], released[1] - clicked[1]);
@@ -382,8 +409,11 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 				testInsideShape(x, y);
 				drag = false;
 			}	
-			//System.out.println("Pair of foxy ladies:" + (released[0] - clicked[0]) + " / " + (released[1] - clicked[1]));
 		}
+		
+		/**
+		 * Set the final location of a moved point
+		 */
 		
 		if(e.getButton() == MouseEvent.BUTTON3){
 			if(onTheEdge == true){
@@ -399,6 +429,9 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		}
 	}
 	
+	/**
+	 * Continuous test if inside a polygon & test if are on a point that makes it up.
+	 */
 	
 	public void mouseMoved(MouseEvent e){
 		int x = e.getX();
@@ -407,7 +440,6 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		testContourShape(x, y);
 		testInsideShape(x, y);
 		
-		//System.out.println("Pair of foxy ladies:" + (x) + " / " + (y));
 	}
 	
 	@Override
@@ -440,18 +472,15 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 			return;
 		}
 		
-		//testInsideShape(x, y);
+		/**
+		 * Redraw the point movement.
+		 */
 		
 		if(onTheEdge == true){
 			currentModified.modifyPoint(movedPointCoordinate,x, y);
 			repaint();
 		}
 		
-		/**
-		if(drag == true){
-			currentModified.translate(x - moved[0], y - moved[1]);
-			repaint();
-		}
-		**/
+
 	}
 }

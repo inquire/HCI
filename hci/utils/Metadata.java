@@ -11,6 +11,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * Class that deals with saving and loading metadata information (# of polygons, color, polygon tag)
+ * from .met files.
+ * 
+ * @author Daniel
+ *
+ */
+
+
 public class Metadata {
 
 	public void saveMetadata(CustomImage imageMetadata, String file){
@@ -41,7 +50,11 @@ public class Metadata {
 		}
 	} 
 	
-	// FileNotFound , IOException, ClassNotFound	
+	/**
+	 * Identifies the .met file for the current loading file	
+	 * @param The filesystem path of the current loading file.
+	 * @return A CustomImage object which contains all the polygon information
+	 */
 	public CustomImage loadMetadata(String file){	
 		
 		CustomImage ci = null;
@@ -82,6 +95,12 @@ public class Metadata {
 		return ci;
 		}
 	
+	
+	/**
+	 * Checks the existance of a given .met file
+	 * @param The filename of the image that is loading.
+	 * @return If a filename exists
+	 */
 	public boolean checkMetadata(String file){
 		String fileName = null;
 		if (file.endsWith(".JPG")){
