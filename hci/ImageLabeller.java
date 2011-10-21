@@ -1,26 +1,9 @@
 package hci;
 
-import hci.utils.CustomImage;
 import hci.utils.BetaPolygon;
-import hci.utils.Metadata;
+import hci.utils.CustomImage;
 import hci.utils.MenuContainer;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
+import hci.utils.Metadata;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -28,19 +11,29 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 
 /**
@@ -109,15 +102,21 @@ public class ImageLabeller extends JFrame {
 		  // ========================= Prompting the user for exit =========================
 		  		
 		  		Object [] options = {"Yes", "No"};
+		  		
 		  		int result = JOptionPane.showOptionDialog(null, "Are you sure you want to exit?", "Really quit?", JOptionPane.YES_NO_CANCEL_OPTION, 
 		  				JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 		  			if (result == JOptionPane.YES_OPTION){
 		  				
-		  				Metadata saveFile = new Metadata();
-		  				saveFile.saveMetadata(imagePanel.getCustomImage(),imagePanel.getCustomImage().getFileName());
-		  				CustomImage something = saveFile.loadMetadata(imagePanel.getCustomImage().getFileName());
-		  				System.out.println(something.size());
-		  				
+		  				int result1 = JOptionPane.showOptionDialog(null, "Do you want to save?", "Really quit?", JOptionPane.YES_NO_CANCEL_OPTION, 
+				  				JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+		  				if (result1 == JOptionPane.YES_OPTION){
+		  					
+		  					Metadata saveFile = new Metadata();
+			  				saveFile.saveMetadata(imagePanel.getCustomImage(),imagePanel.getCustomImage().getFileName());
+			  				CustomImage something = saveFile.loadMetadata(imagePanel.getCustomImage().getFileName());
+			  				System.out.println(something.size());
+		  					
+		  				}
 		  				
 		  				System.out.println("Bye bye!");
 		  				System.exit(0);
@@ -179,6 +178,10 @@ public class ImageLabeller extends JFrame {
         newPolyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (imagePanel.currentPolygon.size() < 3){
+					JOptionPane.showMessageDialog(null,"You must have at least 3 points!","Error",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				String s = (String)JOptionPane.showInputDialog(null,"Select a tag!","Select Tag",JOptionPane.PLAIN_MESSAGE);
 				/*	if (s != null && s.length() > 0){
 						
@@ -207,6 +210,18 @@ public class ImageLabeller extends JFrame {
         loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Object [] options = {"Yes", "No"};
+				int result1 = JOptionPane.showOptionDialog(null, "Do you want to save?", "Really quit?", JOptionPane.YES_NO_CANCEL_OPTION, 
+		  				JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+  				if (result1 == JOptionPane.YES_OPTION){
+  					
+  					Metadata saveFile = new Metadata();
+	  				saveFile.saveMetadata(imagePanel.getCustomImage(),imagePanel.getCustomImage().getFileName());
+	  				CustomImage something = saveFile.loadMetadata(imagePanel.getCustomImage().getFileName());
+	  				System.out.println(something.size());
+  					
+  				}
+  				
 				File file = null;
 				int returnVal = fc.showOpenDialog(fc);
 				if(returnVal == JFileChooser.APPROVE_OPTION){
@@ -218,15 +233,20 @@ public class ImageLabeller extends JFrame {
 					}
 					//clear the previous polygons
 					imagePanel.polygonsList.clear();
-					repaint();
+					model.clear();
+					imagePanel.currentPolygon = new BetaPolygon();
 					
 					Metadata loadFile = new Metadata();
 					if(loadFile.checkMetadata(file.getPath())){
 						CustomImage something = loadFile.loadMetadata(imagePanel.getCustomImage().getFileName());
 		  				System.out.println("Contained polygons are: " + something.size());
 		  				imagePanel.loadPolygons(something);
-						}
+		  				for (BetaPolygon poli : imagePanel.polygonsList){
+		  					model.addElement(poli);
+		  				}
+					}
 		  			repaint();
+		  			rightPanel.updateUI();
 				}
 			    	
 			}
@@ -247,13 +267,15 @@ public class ImageLabeller extends JFrame {
         toolboxPanel.add(saveButton);
         
         JButton clearButton = menu.getClearButton();
-        clearButton.addActionListener(new ActionListener(){
+       /* clearButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
         		imagePanel.currentPolygon = new BetaPolygon();
         		repaint();
         	}
-        });
+        }); */
         toolboxPanel.add(clearButton);
+        
+
         
         JButton deleteButton = menu.getDeleteButton();
         deleteButton.addActionListener(new ActionListener(){
@@ -317,8 +339,8 @@ public class ImageLabeller extends JFrame {
               rightPanel.add(scroll,BorderLayout.CENTER);
               
               //colour the selected polygon from the list
-              list.addMouseListener(new MouseAdapter(){
-              	public void mouseClicked(MouseEvent evt){
+              list.addListSelectionListener(new ListSelectionListener(){
+              	public void valueChanged(ListSelectionEvent e){
               		//System.out.println("list clicked");
               		BetaPolygon polygon = new BetaPolygon();
               		polygon = (BetaPolygon) list.getSelectedValue();
@@ -332,6 +354,12 @@ public class ImageLabeller extends JFrame {
               			repaint();
               		}
               	}
+
+				
+				/*public void valueChanged(ListSelectionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}*/
               	});
               imagePanel.addMouseListener(new MouseAdapter(){
                 	public void mousePressed(MouseEvent evt){
@@ -342,11 +370,17 @@ public class ImageLabeller extends JFrame {
                 			
                 			//int n = imagePanel.testInsideShape(evt.getX(), evt.getY()).
                 			list.setSelectedValue(b, true);
-                			System.out.println(b.getTag());
+                			//System.out.println(b.getTag());
                 			
                 		}
                 	}
                 	});
+              
+              imagePanel.addMouseListener(new MouseAdapter(){
+            	 public void mouseReleased(MouseEvent evt){
+            		 repaint();
+            	 }
+              });
               
               
               

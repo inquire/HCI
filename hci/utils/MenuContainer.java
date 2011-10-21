@@ -2,14 +2,14 @@ package hci.utils;
 
 import hci.ImagePanel;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Container;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 
 /**
  * MenuContainer class contains all the buttons that make up the menu with
@@ -25,6 +25,7 @@ public class MenuContainer extends JFrame{
 	private static final long serialVersionUID = 1L;
 	ImagePanel imagePanel = null;
 	
+	//ImagePanel imagePanel = new ImagePanel();
 	private JButton newPolyButton;
 	private JButton loadButton;
 	private FlowLayout layout;
@@ -82,6 +83,8 @@ public class MenuContainer extends JFrame{
 		clearButton.setSize(100,20);
 		clearButton.setEnabled(true);
 		clearButton.setToolTipText("Click to clear the unfinished polygon");
+		
+		
 		
 		
 	}

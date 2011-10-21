@@ -1,6 +1,7 @@
 package hci;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.awt.Color;
@@ -202,6 +203,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 		if (currentPolygon != null ) {
 			if(currentPolygon.size() < 3){
 				System.out.println("Can't create polygon with less than 3 points Mr! Insert at least "+ (3 - currentPolygon.size()) + " points! " );
+				
 				return;
 			}
 			finishPolygon(currentPolygon);
@@ -388,7 +390,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
 				currentModified.modifyPoint(movedPointCoordinate, x, y);
 				testInsideShape(x, y);
 				//printMeStuff(currentModified);
-				repaint();
+				//repaint();
 					
 				onTheEdge = true;
 				drag = true;
